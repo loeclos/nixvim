@@ -5,7 +5,7 @@
       settings = {
         background = {
           light = "macchiato";
-          dark = "mocha";
+          dark = "gruvbox";
         };
         custom_highlights = ''
           function(highlights)
