@@ -26,22 +26,6 @@
           "                                                                       "
         ];
       }
-      {
-        type = "padding";
-        val = 2;
-      }
-      {
-        type = "padding";
-        val = 2;
-      }
-      {
-        opts = {
-          hl = "Keyword";
-          position = "center";
-        };
-        type = "text";
-        val = "Inspiring quote here.";
-      }
     ];
   };
   # plugins.startup = {
