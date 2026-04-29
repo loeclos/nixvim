@@ -1,7 +1,7 @@
 {
   plugins.alpha = {
     enable = true;
-  }
+  };
   # plugins.startup = {
   #   enable = true;
   #   settings = {
