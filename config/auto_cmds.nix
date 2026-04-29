@@ -26,7 +26,7 @@
       callback = {
         __raw = ''
           function()
-            vim.cmd('alpha')
+            vim.cmd('Alpha')
           end
         '';
       };

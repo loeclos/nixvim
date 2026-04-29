@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ ... }:
 {
   plugins.alpha = {
     enable = true;
