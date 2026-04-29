@@ -10,11 +10,10 @@ _: {
         ];
         disabledFiletypes = {
           statusline = [
-            "startup"
             "alpha"
           ];
         };
-        theme = "catppuccin";
+        theme = "gruvbox";
       };
       sections = {
         lualine_a = [
