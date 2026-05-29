@@ -20,8 +20,8 @@
       };
     }
     {
-      group = "vim_enter";
-      event = [ "VimEnter" ];
+      group = "ui_enter";
+      event = [ "UIEnter" ];
       pattern = "*";
       callback = {
         __raw = ''
