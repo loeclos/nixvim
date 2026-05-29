@@ -10,7 +10,7 @@ _: {
         ];
         disabledFiletypes = {
           statusline = [
-            "alpha"
+            "startify"
           ];
         };
         theme = "gruvbox";

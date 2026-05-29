@@ -19,25 +19,24 @@
         '';
       };
     }
-    {
-      group = "ui_enter";
-      event = [ "UIEnter" ];
-      pattern = "*";
-      callback = {
-        __raw = ''
-          function()
-            vim.cmd('Alpha')
-          end
-        '';
-      };
-    }
+    # {
+    #   group = "vim_enter";
+    #   event = [ "VimEnter" ];
+    #   pattern = "*";
+    #   callback = {
+    #     __raw = ''
+    #       function()
+    #         vim.cmd('Alpha')
+    #       end
+    #     '';
+    #   };
+    # }
     {
       group = "indentscope";
       event = [ "FileType" ];
       pattern = [
         "help"
-        "Alpha"
-        "alpha"
+        "startify"
         "neo-tree"
         "Trouble"
         "trouble"
