@@ -49,6 +49,10 @@
           nvim = nixvim'.makeNixvimWithModule nixvimModule;
         in
         {
+          _module.args.pkgs = import inputs.nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
           checks = {
             default = nixvimLib.check.mkTestDerivationFromNixvimModule nixvimModule;
             pre-commit-check = pre-commit-hooks.lib.${system}.run {
