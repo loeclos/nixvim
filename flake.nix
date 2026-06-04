@@ -1,8 +1,8 @@
 {
-  description = "deCort.tech NeoVim configuration";
+  description = "loeclos NeoVim configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
     nixvim = {
       url = "github:nix-community/nixvim";
