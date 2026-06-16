@@ -35,6 +35,9 @@
         gopls = {
           enable = true;
         };
+        clang = {
+          enable = true;
+        };
         terraformls = {
           enable = true;
         };
