@@ -29,7 +29,7 @@
         marksman = {
           enable = true;
         };
-        pyright = {
+        ty = {
           enable = true;
         };
         gopls = {
