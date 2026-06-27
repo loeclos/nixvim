@@ -25,11 +25,11 @@
       clipboard = "unnamedplus";
 
       # Number of spaces that represent a <TAB>
-      tabstop = 4;
-      softtabstop = 4;
+      tabstop = 2;
+      softtabstop = 2;
 
       # Show tabline always
-      showtabline = 4;
+      showtabline = 1;
 
       # Use spaces instead of tabs
       expandtab = true;
@@ -38,7 +38,7 @@
       smartindent = true;
 
       # Number of spaces to use for each step of (auto)indent
-      shiftwidth = 4;
+      shiftwidth = 2;
 
       # Enable break indent
       breakindent = true;
