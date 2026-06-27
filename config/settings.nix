@@ -31,8 +31,8 @@
       # Show tabline always
       showtabline = 4;
 
-      # Use tabs instead of spaces
-      expandtab = false;
+      # Use spaces instead of tabs
+      expandtab = true;
 
       # Enable smart indentation
       smartindent = true;
