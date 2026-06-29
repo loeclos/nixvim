@@ -7,6 +7,10 @@
         backend = "nui";
       };
 
+      notify = {
+        enabled = true;
+      };
+
       presets = {
         bottom_search = false;
         command_palette = true;
