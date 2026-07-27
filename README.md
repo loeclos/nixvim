@@ -1,8 +1,8 @@
 # NixVim Configuration
 
-This repository contains my personal configuration NixVim, a Neovim configuration managed with Nix.
+This repo was originally based of `dc-tec/nixvim`; I think that we are to far gone from that point to simply be counted as the same.
 
-![Neovim](./.docs/images/neovim.png)
+This repo is alsp part of the [.dotfiles](https://github.com/loeclos/.dotfiles)  project.
 
 ## How to use
 
@@ -103,5 +103,6 @@ Please refer to the individual `.nix` files for more detailed configuration info
 
 This configuration has taken inspiration from the following contributors.
 
+- [DC-Tec](https://github.com/dc-tec/nixvim)
 - [Elythh](https://github.com/elythh/nixvim)
 - [MikaelFangel](https://github.com/MikaelFangel/nixvim-config)
