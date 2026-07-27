@@ -23,7 +23,7 @@
         nil_ls = {
           enable = true;
         };
-        ts_ls = {
+        vtsls = {
           enable = true;
         };
         marksman = {

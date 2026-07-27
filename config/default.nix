@@ -20,11 +20,13 @@ _: {
     ./plugins/snippets/luasnip.nix
 
     # Editor plugins and configurations
+    ./plugins/editor/emmet.nix
     ./plugins/editor/neo-tree.nix
     ./plugins/editor/treesitter.nix
     ./plugins/editor/undotree.nix
     ./plugins/editor/illuminate.nix
     ./plugins/editor/indent-blankline.nix
+    ./plugins/editor/tailwindcss.nix
     ./plugins/editor/todo-comments.nix
     ./plugins/editor/copilot-chat.nix
     ./plugins/editor/navic.nix
@@ -36,6 +38,7 @@ _: {
     ./plugins/ui/startify.nix
 
     # LSP and formatting
+    ./plugins/lsp/eslint.nix
     ./plugins/lsp/lsp.nix
     ./plugins/lsp/conform.nix
     ./plugins/lsp/fidget.nix
