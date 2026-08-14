@@ -16,6 +16,16 @@
     }
     {
       mode = [
+        "i"
+      ];
+      key = "jj";
+      action = "<Esc>";
+      options = {
+        remap = false;
+      };
+    }
+    {
+      mode = [
         "n"
         "x"
       ];
