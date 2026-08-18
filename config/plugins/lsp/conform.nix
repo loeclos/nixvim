@@ -114,6 +114,7 @@
             __unkeyed-2 = "prettier";
             stop_after_first = true;
           };
+          rust = [ "rustfmt" ];
           terraform = [ "terraform_fmt" ];
           bicep = [ "bicep" ];
           bash = [
@@ -158,6 +159,9 @@
           };
           bicep = {
             command = "${lib.getExe pkgs.bicep}";
+          };
+          rustfmt = {
+            command = "${lib.getExe pkgs.rustfmt}";
           };
           #yamlfmt = {
           #  command = "${lib.getExe pkgs.yamlfmt}";

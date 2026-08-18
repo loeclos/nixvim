@@ -41,6 +41,7 @@ _: {
     ./plugins/lsp/eslint.nix
     ./plugins/lsp/lsp.nix
     ./plugins/lsp/conform.nix
+    ./plugins/lsp/rust.nix
     ./plugins/lsp/fidget.nix
 
     # Git
