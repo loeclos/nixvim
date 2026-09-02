@@ -25,6 +25,15 @@
       };
     }
     {
+      mode = "i";
+      key = "kk";
+      action = "<Esc><cmd>update<cr>";
+      options = {
+        desc = "Save file with :update";
+        silent = true;
+      };
+    }
+    {
       mode = [
         "n"
         "x"
