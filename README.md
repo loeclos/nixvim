@@ -50,7 +50,7 @@ home-manager.users.<user>.home.packages = [
 
 ### Themes
 
-- `default.nix`: tokyonight (LazyVim default colorscheme).
+- `default.nix`: kape (personal choice, pinned from GitHub; LazyVim default is tokyonight).
 
 ### Completion
 
