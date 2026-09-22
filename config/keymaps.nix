@@ -299,7 +299,7 @@
         "i"
       ];
       key = "jj";
-      action = "stopinsert";
+      action = "<cmd>:stopinsert<cr>";
       options = {
         desc = "Escape";
       };
