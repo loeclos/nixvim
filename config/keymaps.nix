@@ -294,6 +294,17 @@
       };
     }
 
+    {
+      mode = [
+        "i"
+      ];
+      key = "jj";
+      action = "stopinsert";
+      options = {
+        desc = "Escape";
+      };
+    }
+
     # Clear search and stop snippet on escape
     {
       mode = [
