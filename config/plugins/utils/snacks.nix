@@ -2,6 +2,9 @@
 {
   extraPackages = with pkgs; [
     lazygit
+    # snacks picker backends ( LazyVim gets these via mason/system packages )
+    fd
+    ripgrep
   ];
 
   plugins.snacks = {

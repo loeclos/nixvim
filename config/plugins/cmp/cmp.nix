@@ -24,6 +24,20 @@
         };
         signature.enabled = true;
         snippets.preset = "luasnip";
+        # cmdline (":") completion menu, like LazyVim
+        cmdline = {
+          keymap = {
+            preset = "cmdline";
+          };
+          completion = {
+            menu = {
+              auto_show = true;
+            };
+            ghost_text = {
+              enabled = true;
+            };
+          };
+        };
         sources.default = [
           "lsp"
           "path"
