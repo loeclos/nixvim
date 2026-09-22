@@ -1,15 +1,4 @@
+# Disabled: LazyVim uses snacks.words (see utils/snacks.nix), not vim-illuminate.
 {
-  plugins.illuminate = {
-    enable = true;
-    settings = {
-      under_cursor = false;
-      filetypes_denylist = [
-        "Outline"
-        "TelescopePrompt"
-        "startify"
-        "harpoon"
-        "reason"
-      ];
-    };
-  };
+  plugins.illuminate.enable = false;
 }

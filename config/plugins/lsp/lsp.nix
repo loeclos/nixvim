@@ -1,12 +1,10 @@
 { pkgs, ... }:
 {
   plugins = {
-    lsp-lines = {
-      enable = true;
-    };
-    lsp-format = {
-      enable = true;
-    };
+    # Disabled: not part of LazyVim (diagnostics render via signs/virtual text,
+    # formatting via conform).
+    lsp-lines.enable = false;
+    lsp-format.enable = false;
     helm = {
       enable = true;
     };
@@ -83,54 +81,123 @@
 
       keymaps = {
         silent = true;
-        lspBuf = {
-          gd = {
-            action = "definition";
-            desc = "Goto Definition";
-          };
-          gr = {
-            action = "references";
-            desc = "Goto References";
-          };
-          gD = {
-            action = "declaration";
-            desc = "Goto Declaration";
-          };
-          gI = {
-            action = "implementation";
-            desc = "Goto Implementation";
-          };
-          gT = {
-            action = "type_definition";
-            desc = "Type Definition";
-          };
-          K = {
-            action = "hover";
-            desc = "Hover";
-          };
-          "<leader>cw" = {
-            action = "workspace_symbol";
-            desc = "Workspace Symbol";
-          };
-          "<leader>cr" = {
-            action = "rename";
-            desc = "Rename";
-          };
-        };
-        diagnostic = {
-          "<leader>cd" = {
-            action = "open_float";
-            desc = "Line Diagnostics";
-          };
-          "[d" = {
-            action = "goto_next";
-            desc = "Next Diagnostic";
-          };
-          "]d" = {
-            action = "goto_prev";
-            desc = "Previous Diagnostic";
-          };
-        };
+        extra = [
+          {
+            action.__raw = "function() vim.cmd.LspInfo() end";
+            key = "<leader>cl";
+            options.desc = "Lsp Info";
+          }
+          {
+            action.__raw = "function() Snacks.picker.lsp_definitions() end";
+            key = "gd";
+            options.desc = "Goto Definition";
+          }
+          {
+            action.__raw = "function() Snacks.picker.lsp_references() end";
+            key = "gr";
+            options = {
+              desc = "References";
+              nowait = true;
+            };
+          }
+          {
+            action.__raw = "function() Snacks.picker.lsp_implementations() end";
+            key = "gI";
+            options.desc = "Goto Implementation";
+          }
+          {
+            action.__raw = "function() Snacks.picker.lsp_type_definitions() end";
+            key = "gy";
+            options.desc = "Goto T[y]pe Definition";
+          }
+          {
+            action.__raw = "function() Snacks.picker.lsp_declarations() end";
+            key = "gD";
+            options.desc = "Goto Declaration";
+          }
+          {
+            action.__raw = "function() Snacks.picker.lsp_incoming_calls() end";
+            key = "gai";
+            options.desc = "C[a]lls Incoming";
+          }
+          {
+            action.__raw = "function() Snacks.picker.lsp_outgoing_calls() end";
+            key = "gao";
+            options.desc = "C[a]lls Outgoing";
+          }
+          {
+            action.__raw = "function() vim.lsp.buf.hover() end";
+            key = "K";
+            options.desc = "Hover";
+          }
+          {
+            action.__raw = "function() vim.lsp.buf.signature_help() end";
+            key = "gK";
+            options.desc = "Signature Help";
+          }
+          {
+            mode = "i";
+            action.__raw = "function() vim.lsp.buf.signature_help() end";
+            key = "<C-k>";
+            options.desc = "Signature Help";
+          }
+          {
+            mode = [
+              "n"
+              "x"
+            ];
+            action.__raw = "vim.lsp.buf.code_action";
+            key = "<leader>ca";
+            options.desc = "Code Action";
+          }
+          {
+            mode = [
+              "n"
+              "x"
+            ];
+            action.__raw = "function() vim.lsp.codelens.run() end";
+            key = "<leader>cc";
+            options.desc = "Run Codelens";
+          }
+          {
+            action.__raw = "function() vim.lsp.codelens.refresh() end";
+            key = "<leader>cC";
+            options.desc = "Refresh & Display Codelens";
+          }
+          {
+            action.__raw = "vim.lsp.buf.rename";
+            key = "<leader>cr";
+            options.desc = "Rename";
+          }
+          {
+            action.__raw = "function() Snacks.rename.rename_file() end";
+            key = "<leader>cR";
+            options.desc = "Rename File";
+          }
+          {
+            action.__raw = ''
+              function()
+                vim.lsp.buf.code_action({
+                  context = { only = { "source" }, diagnostics = {} },
+                })
+              end
+            '';
+            key = "<leader>cA";
+            options.desc = "Source Action";
+          }
+          {
+            action.__raw = ''
+              function()
+                vim.lsp.buf.code_action({
+                  apply = true,
+                  context = { only = { "source.organizeImports" }, diagnostics = {} },
+                })
+              end
+            '';
+            key = "<leader>co";
+            options.desc = "Organize Imports";
+          }
+        ];
       };
     };
   };

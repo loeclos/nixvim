@@ -1,0 +1,50 @@
+# LazyVim flash spec. See https://www.lazyvim.org/plugins/editor#flashnvim
+{
+  plugins.flash = {
+    enable = true;
+  };
+
+  keymaps = [
+    {
+      mode = [
+        "n"
+        "o"
+        "x"
+      ];
+      key = "s";
+      action.__raw = "function() require('flash').jump() end";
+      options.desc = "Flash";
+    }
+    {
+      mode = [
+        "n"
+        "o"
+        "x"
+      ];
+      key = "S";
+      action.__raw = "function() require('flash').treesitter() end";
+      options.desc = "Flash Treesitter";
+    }
+    {
+      mode = "o";
+      key = "r";
+      action.__raw = "function() require('flash').remote() end";
+      options.desc = "Remote Flash";
+    }
+    {
+      mode = [
+        "o"
+        "x"
+      ];
+      key = "R";
+      action.__raw = "function() require('flash').treesitter_search() end";
+      options.desc = "Treesitter Search";
+    }
+    {
+      mode = "c";
+      key = "<C-s>";
+      action.__raw = "function() require('flash').toggle() end";
+      options.desc = "Toggle Flash Search";
+    }
+  ];
+}

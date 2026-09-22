@@ -1,7 +1,53 @@
 {
-  globals.mapleader = " ";
+  globals = {
+    mapleader = " ";
+    maplocalleader = "\\";
+  };
+
+  extraConfigLuaPre =
+    # lua
+    ''
+      _G.Nixvim = _G.Nixvim or {}
+
+      function Nixvim.root()
+        -- LazyVim root_spec = { "lsp", { ".git", "lua" }, "cwd" }
+        local buf = vim.api.nvim_get_current_buf()
+        for _, client in ipairs(vim.lsp.get_clients({ bufnr = buf })) do
+          if client.name ~= "copilot" and client.config and client.config.root_dir then
+            return client.config.root_dir
+          end
+        end
+        local path = vim.api.nvim_buf_get_name(0)
+        if path == "" then
+          return vim.uv.cwd()
+        end
+        local found = vim.fs.find({ ".git", "lua" }, { path = vim.fs.dirname(path), upward = true })[1]
+        if found then
+          -- found is either <root>/.git or <root>/lua, both live directly under root
+          return vim.fn.fnamemodify(found, ":h")
+        end
+        return vim.uv.cwd()
+      end
+
+      function Nixvim.diagnostic_goto(next, severity)
+        return function()
+          local opts = {
+            count = (next and 1 or -1) * vim.v.count1,
+            severity = severity and vim.diagnostic.severity[severity] or nil,
+            float = true,
+          }
+          if vim.diagnostic.jump then
+            vim.diagnostic.jump(opts)
+          else
+            vim.diagnostic[next and "goto_next" or "goto_prev"]({ severity = opts.severity })
+          end
+        end
+      end
+
+    '';
 
   keymaps = [
+    # better up/down
     {
       mode = [
         "n"
@@ -12,25 +58,7 @@
       options = {
         expr = true;
         silent = true;
-      };
-    }
-    {
-      mode = [
-        "i"
-      ];
-      key = "jj";
-      action = "<Esc>";
-      options = {
-        remap = false;
-      };
-    }
-    {
-      mode = "i";
-      key = "kk";
-      action = "<Esc><cmd>update<cr>";
-      options = {
-        desc = "Save file with :update";
-        silent = true;
+        desc = "Down";
       };
     }
     {
@@ -43,6 +71,7 @@
       options = {
         expr = true;
         silent = true;
+        desc = "Down";
       };
     }
     {
@@ -55,6 +84,7 @@
       options = {
         expr = true;
         silent = true;
+        desc = "Up";
       };
     }
     {
@@ -67,8 +97,11 @@
       options = {
         expr = true;
         silent = true;
+        desc = "Up";
       };
     }
+
+    # Move to window using the <ctrl> hjkl keys
     {
       mode = "n";
       key = "<C-h>";
@@ -105,6 +138,8 @@
         remap = true;
       };
     }
+
+    # Resize window using <ctrl> arrow keys
     {
       mode = "n";
       key = "<C-Up>";
@@ -137,10 +172,12 @@
         desc = "Increase Window Width";
       };
     }
+
+    # Move Lines
     {
       mode = "n";
       key = "<A-j>";
-      action = "<cmd>m .+1<cr>==";
+      action = "<cmd>execute 'move .+' . v:count1<cr>==";
       options = {
         desc = "Move Down";
       };
@@ -148,7 +185,7 @@
     {
       mode = "n";
       key = "<A-k>";
-      action = "<cmd>m .-2<cr>==";
+      action = "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==";
       options = {
         desc = "Move Up";
       };
@@ -172,7 +209,7 @@
     {
       mode = "v";
       key = "<A-j>";
-      action = ":m '>+1<cr>gv=gv";
+      action = '':<C-u>execute "'<,'>move '>+" . v:count1<cr>gv=gv'';
       options = {
         desc = "Move Down";
       };
@@ -180,47 +217,103 @@
     {
       mode = "v";
       key = "<A-k>";
-      action = ":m '<-2<cr>gv=gv";
+      action = '':<C-u>execute "'<,'>move '<-" . (v:count1 + 1)<cr>gv=gv'';
       options = {
         desc = "Move Up";
       };
     }
+
+    # buffers
     {
-      mode = "i";
-      key = ";";
-      action = ";<c-g>u";
-    }
-    {
-      mode = "i";
-      key = ".";
-      action = ".<c-g>u";
-    }
-    {
-      mode = "i";
-      key = ";";
-      action = ";<c-g>u";
-    }
-    {
-      mode = [
-        "i"
-        "x"
-        "n"
-        "s"
-      ];
-      key = "<C-s>";
-      action = "<cmd>w<cr><esc>";
+      mode = "n";
+      key = "<leader>bb";
+      action = "<cmd>e #<cr>";
       options = {
-        desc = "Save File";
+        desc = "Switch to Other Buffer";
       };
     }
     {
+      mode = "n";
+      key = "<leader>`";
+      action = "<cmd>e #<cr>";
+      options = {
+        desc = "Switch to Other Buffer";
+      };
+    }
+    {
+      mode = "n";
+      key = "<leader>bd";
+      action.__raw = "function() require('mini.bufremove').delete(0, false) end";
+      options = {
+        desc = "Delete Buffer";
+      };
+    }
+    {
+      mode = "n";
+      key = "<leader>bo";
+      action.__raw = ''
+        function()
+          local current = vim.api.nvim_get_current_buf()
+          for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+            if buf ~= current and vim.bo[buf].buflisted then
+              require("mini.bufremove").delete(buf, false)
+            end
+          end
+        end
+      '';
+      options = {
+        desc = "Delete Other Buffers";
+      };
+    }
+    {
+      mode = "n";
+      key = "<leader>bi";
+      action.__raw = ''
+        function()
+          local visible = {}
+          for _, win in ipairs(vim.api.nvim_list_wins()) do
+            visible[vim.api.nvim_win_get_buf(win)] = true
+          end
+          for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+            if vim.bo[buf].buflisted and not visible[buf] then
+              require("mini.bufremove").delete(buf, false)
+            end
+          end
+        end
+      '';
+      options = {
+        desc = "Delete Invisible Buffers";
+      };
+    }
+    {
+      mode = "n";
+      key = "<leader>bD";
+      action = "<cmd>:bd<cr>";
+      options = {
+        desc = "Delete Buffer and Window";
+      };
+    }
+
+    # Clear search and stop snippet on escape
+    {
       mode = [
         "i"
         "n"
+        "s"
       ];
       key = "<esc>";
-      action = "<cmd>noh<cr><esc>";
+      action.__raw = ''
+        function()
+          vim.cmd("noh")
+          local ok, luasnip = pcall(require, "luasnip")
+          if ok and luasnip.session.current_nodes[vim.api.nvim_get_current_buf()] then
+            luasnip.unlink_current()
+          end
+          return "<esc>"
+        end
+      '';
       options = {
+        expr = true;
         desc = "Escape and Clear hlsearch";
       };
     }
@@ -232,6 +325,8 @@
         desc = "Redraw / Clear hlsearch / Diff Update";
       };
     }
+
+    # https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
     {
       mode = "n";
       key = "n";
@@ -286,10 +381,146 @@
         desc = "Prev Search Result";
       };
     }
+
+    # Add undo break-points
+    {
+      mode = "i";
+      key = ",";
+      action = ",<c-g>u";
+    }
+    {
+      mode = "i";
+      key = ".";
+      action = ".<c-g>u";
+    }
+    {
+      mode = "i";
+      key = ";";
+      action = ";<c-g>u";
+    }
+
+    # save file
+    {
+      mode = [
+        "i"
+        "x"
+        "n"
+        "s"
+      ];
+      key = "<C-s>";
+      action = "<cmd>w<cr><esc>";
+      options = {
+        desc = "Save File";
+      };
+    }
+
+    # keywordprg
+    {
+      mode = "n";
+      key = "<leader>K";
+      action = "<cmd>norm! K<cr>";
+      options = {
+        desc = "Keywordprg";
+      };
+    }
+
+    # better indenting
+    {
+      mode = "x";
+      key = "<";
+      action = "<gv";
+    }
+    {
+      mode = "x";
+      key = ">";
+      action = ">gv";
+    }
+
+    # commenting
+    {
+      mode = "n";
+      key = "gco";
+      action = "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>";
+      options = {
+        desc = "Add Comment Below";
+      };
+    }
+    {
+      mode = "n";
+      key = "gcO";
+      action = "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>";
+      options = {
+        desc = "Add Comment Above";
+      };
+    }
+
+    # new file
+    {
+      mode = "n";
+      key = "<leader>fn";
+      action = "<cmd>enew<cr>";
+      options = {
+        desc = "New File";
+      };
+    }
+
+    # location list
+    {
+      mode = "n";
+      key = "<leader>xl";
+      action.__raw = ''
+        function()
+          local success, err = pcall(vim.fn.getloclist(0, { winid = 0 }).winid ~= 0 and vim.cmd.lclose or vim.cmd.lopen)
+          if not success and err then
+            vim.notify(err, vim.log.levels.ERROR)
+          end
+        end
+      '';
+      options = {
+        desc = "Location List";
+      };
+    }
+
+    # quickfix list
+    {
+      mode = "n";
+      key = "<leader>xq";
+      action.__raw = ''
+        function()
+          local success, err = pcall(vim.fn.getqflist({ winid = 0 }).winid ~= 0 and vim.cmd.cclose or vim.cmd.copen)
+          if not success and err then
+            vim.notify(err, vim.log.levels.ERROR)
+          end
+        end
+      '';
+      options = {
+        desc = "Quickfix List";
+      };
+    }
+    # NOTE: [q/]q are trouble-aware and live in plugins/editor/trouble.nix.
+
+    # formatting
+    {
+      mode = [
+        "n"
+        "x"
+      ];
+      key = "<leader>cf";
+      action.__raw = ''
+        function()
+          require("conform").format({ async = true, lsp_format = "fallback" })
+        end
+      '';
+      options = {
+        desc = "Format";
+      };
+    }
+
+    # diagnostic
     {
       mode = "n";
       key = "<leader>cd";
-      action = "vim.diagnostic.open_float";
+      action.__raw = "vim.diagnostic.open_float";
       options = {
         desc = "Line Diagnostics";
       };
@@ -297,7 +528,7 @@
     {
       mode = "n";
       key = "]d";
-      action = "diagnostic_goto(true)";
+      action.__raw = "Nixvim.diagnostic_goto(true)";
       options = {
         desc = "Next Diagnostic";
       };
@@ -305,7 +536,7 @@
     {
       mode = "n";
       key = "[d";
-      action = "diagnostic_goto(false)";
+      action.__raw = "Nixvim.diagnostic_goto(false)";
       options = {
         desc = "Prev Diagnostic";
       };
@@ -313,7 +544,7 @@
     {
       mode = "n";
       key = "]e";
-      action = "diagnostic_goto(true 'ERROR')";
+      action.__raw = ''Nixvim.diagnostic_goto(true, "ERROR")'';
       options = {
         desc = "Next Error";
       };
@@ -321,7 +552,7 @@
     {
       mode = "n";
       key = "[e";
-      action = "diagnostic_goto(false 'ERROR')";
+      action.__raw = ''Nixvim.diagnostic_goto(false, "ERROR")'';
       options = {
         desc = "Prev Error";
       };
@@ -329,7 +560,7 @@
     {
       mode = "n";
       key = "]w";
-      action = "diagnostic_goto(true 'WARN')";
+      action.__raw = ''Nixvim.diagnostic_goto(true, "WARN")'';
       options = {
         desc = "Next Warning";
       };
@@ -337,11 +568,29 @@
     {
       mode = "n";
       key = "[w";
-      action = "diagnostic_goto(false 'WARN')";
+      action.__raw = ''Nixvim.diagnostic_goto(false, "WARN")'';
       options = {
         desc = "Prev Warning";
       };
     }
+
+    # NOTE: <leader>u* toggles live in plugins/utils/snacks.nix (Snacks.toggle, like LazyVim).
+
+    # lazy (plugins are managed declaratively with Nix, so this explains that)
+    {
+      mode = "n";
+      key = "<leader>l";
+      action.__raw = ''
+        function()
+          vim.notify("Plugins are managed declaratively with Nix - see config/plugins", vim.log.levels.INFO)
+        end
+      '';
+      options = {
+        desc = "Lazy";
+      };
+    }
+
+    # quit
     {
       mode = "n";
       key = "<leader>qq";
@@ -350,98 +599,45 @@
         desc = "Quit All";
       };
     }
+
+    # highlights under cursor
     {
       mode = "n";
       key = "<leader>ui";
-      action = "vim.show_pos";
+      action.__raw = "vim.show_pos";
       options = {
         desc = "Inspect Pos";
       };
     }
     {
-      mode = "t";
-      key = "<esc><esc>";
-      action = "<c-\\><c-n>";
+      mode = "n";
+      key = "<leader>uI";
+      action.__raw = ''
+        function()
+          vim.treesitter.inspect_tree()
+          vim.api.nvim_input("I")
+        end
+      '';
       options = {
-        desc = "Enter Normal Mode";
+        desc = "Inspect Tree";
       };
     }
-    {
-      mode = "t";
-      key = "<C-h>";
-      action = "<cmd>wincmd h<cr>";
-      options = {
-        desc = "Go to Left Window";
-      };
-    }
-    {
-      mode = "t";
-      key = "<C-j>";
-      action = "<cmd>wincmd j<cr>";
-      options = {
-        desc = "Go to Lower Window";
-      };
-    }
-    {
-      mode = "t";
-      key = "<C-k>";
-      action = "<cmd>wincmd k<cr>";
-      options = {
-        desc = "Go to Upper Window";
-      };
-    }
-    {
-      mode = "t";
-      key = "<C-l>";
-      action = "<cmd>wincmd l<cr>";
-      options = {
-        desc = "Go to Right Window";
-      };
-    }
-    {
-      mode = "t";
-      key = "<C-/>";
-      action = "<cmd>close<cr>";
-      options = {
-        desc = "Hide Terminal";
-      };
-    }
+
+    # LazyVim changelog
     {
       mode = "n";
-      key = "<leader>ww";
-      action = "<C-W>p";
+      key = "<leader>L";
+      action.__raw = ''
+        function()
+          vim.ui.open("https://github.com/LazyVim/LazyVim/releases")
+        end
+      '';
       options = {
-        desc = "Other Window";
-        remap = true;
+        desc = "LazyVim Changelog";
       };
     }
-    {
-      mode = "n";
-      key = "<leader>wd";
-      action = "<C-W>c";
-      options = {
-        desc = "Delete Window";
-        remap = true;
-      };
-    }
-    {
-      mode = "n";
-      key = "<leader>w-";
-      action = "<C-W>s";
-      options = {
-        desc = "Split Window Below";
-        remap = true;
-      };
-    }
-    {
-      mode = "n";
-      key = "<leader>w|";
-      action = "<C-W>v";
-      options = {
-        desc = "Split Window Right";
-        remap = true;
-      };
-    }
+
+    # windows
     {
       mode = "n";
       key = "<leader>-";
@@ -462,10 +658,29 @@
     }
     {
       mode = "n";
+      key = "<leader>wd";
+      action = "<C-W>c";
+      options = {
+        desc = "Delete Window";
+        remap = true;
+      };
+    }
+
+    # tabs
+    {
+      mode = "n";
       key = "<leader><tab>l";
       action = "<cmd>tablast<cr>";
       options = {
         desc = "Last Tab";
+      };
+    }
+    {
+      mode = "n";
+      key = "<leader><tab>o";
+      action = "<cmd>tabonly<cr>";
+      options = {
+        desc = "Close Other Tabs";
       };
     }
     {

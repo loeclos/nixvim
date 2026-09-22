@@ -1,20 +1,5 @@
+# Disabled: LazyVim uses Snacks.picker.undo() for undo history
+# (see utils/snacks.nix <leader>su), not undotree.
 {
-  plugins.undotree = {
-    enable = true;
-    settings = {
-      autoOpenDiff = true;
-      focusOnToggle = true;
-    };
-  };
-  keymaps = [
-    {
-      mode = "n";
-      key = "<leader>ut";
-      action = "<cmd>UndotreeToggle<CR>";
-      options = {
-        silent = true;
-        desc = "Undotree";
-      };
-    }
-  ];
+  plugins.undotree.enable = false;
 }

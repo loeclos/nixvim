@@ -40,6 +40,23 @@
           bang = true,
         })
       '';
+    keymaps = [
+      {
+        mode = [
+          "n"
+          "x"
+        ];
+        key = "<leader>cF";
+        action.__raw = ''
+          function()
+            require("conform").format({ formatters = { "injected" }, timeout_ms = 3000 })
+          end
+        '';
+        options = {
+          desc = "Format Injected Langs";
+        };
+      }
+    ];
     plugins.conform-nvim = {
       enable = true;
       settings = {

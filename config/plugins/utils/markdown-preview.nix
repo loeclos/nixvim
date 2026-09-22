@@ -19,10 +19,10 @@ _: {
   keymaps = [
     {
       mode = "n";
-      key = "<leader>mp";
-      action = "<cmd>MarkdownPreview<cr>";
+      key = "<leader>cp";
+      action = "<cmd>MarkdownPreviewToggle<cr>";
       options = {
-        desc = "Toggle Markdown Preview";
+        desc = "Markdown Preview";
       };
     }
   ];

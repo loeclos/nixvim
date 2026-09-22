@@ -8,34 +8,48 @@ _: {
   keymaps = [
     {
       mode = "n";
-      key = "<leader>t";
+      key = "<leader>ft";
+      action.__raw = ''
+        function()
+          require("toggleterm").toggle(1, nil, Nixvim.root(), "float")
+        end
+      '';
+      options = {
+        desc = "Terminal (Root Dir)";
+      };
+    }
+    {
+      mode = "n";
+      key = "<leader>fT";
+      action.__raw = ''
+        function()
+          require("toggleterm").toggle(2, nil, vim.uv.cwd(), "float")
+        end
+      '';
+      options = {
+        desc = "Terminal (cwd)";
+      };
+    }
+    {
+      mode = [
+        "n"
+        "t"
+      ];
+      key = "<C-/>";
       action = "<cmd>ToggleTerm<cr>";
       options = {
-        desc = "Toggle Terminal Window";
+        desc = "Terminal (Root Dir)";
       };
     }
     {
-      mode = "n";
-      key = "<leader>tv";
-      action = "<cmd>ToggleTerm direction=vertical<cr>";
+      mode = [
+        "n"
+        "t"
+      ];
+      key = "<C-_>";
+      action = "<cmd>ToggleTerm<cr>";
       options = {
-        desc = "Toggle Vertical Terminal Window";
-      };
-    }
-    {
-      mode = "n";
-      key = "<leader>th";
-      action = "<cmd>ToggleTerm direction=horizontal<cr>";
-      options = {
-        desc = "Toggle Horizontal Terminal Window";
-      };
-    }
-    {
-      mode = "n";
-      key = "<leader>tf";
-      action = "<cmd>ToggleTerm direction=float<cr>";
-      options = {
-        desc = "Toggle Floating Terminal Window";
+        desc = "which_key_ignore";
       };
     }
   ];
