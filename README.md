@@ -111,7 +111,8 @@ home-manager.users.<user>.home.packages = [
 
 Nix manages plugins declaratively, so there is no `lazy.nvim` UI:
 
-- `<leader>l` (Lazy) shows a hint instead of opening lazy.nvim; the dashboard `l` key does the same.
+- `<leader>l` (Lazy), `<leader>L` (changelog) and `<leader>sp` (plugin specs) do not
+  exist; neither do the matching dashboard keys.
 - `<leader>cm` (Mason) does not exist; LSP/linter binaries come from Nix
   (`plugins/lsp/*.nix`, `extraPackages`).
 - `<leader>gD` (git diff against origin) has no equivalent picker bound.

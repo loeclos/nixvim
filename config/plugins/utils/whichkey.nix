@@ -2,6 +2,11 @@
   plugins.which-key = {
     enable = true;
     settings = {
+      # side column popup with border (instead of the wide bottom bar)
+      preset = "helix";
+      win = {
+        border = "rounded";
+      };
       spec = [
         {
           __unkeyed-1 = "<leader><tab>";

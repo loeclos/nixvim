@@ -68,18 +68,6 @@
               action = ":lua require('persistence').load()";
             }
             {
-              icon = " ";
-              key = "x";
-              desc = "Plugin Specs";
-              action = ":lua Snacks.picker.lazy()";
-            }
-            {
-              icon = "󰒲 ";
-              key = "l";
-              desc = "Nix Plugins";
-              action = ":lua vim.notify('Plugins are managed declaratively with Nix - see config/plugins', vim.log.levels.INFO)";
-            }
-            {
               icon = " ";
               key = "q";
               desc = "Quit";
@@ -87,6 +75,17 @@
             }
           ];
         };
+        # LazyVim default sections end with a `startup` footer that requires
+        # lazy.nvim (`require("lazy.stats")`), which does not exist here,
+        # so it is dropped. Everything else matches LazyVim.
+        sections = [
+          { section = "header"; }
+          {
+            section = "keys";
+            gap = 1;
+            padding = 1;
+          }
+        ];
       };
     };
   };
@@ -498,12 +497,6 @@
       key = "<leader>sM";
       action.__raw = "function() Snacks.picker.man() end";
       options.desc = "Man Pages";
-    }
-    {
-      mode = "n";
-      key = "<leader>sp";
-      action.__raw = "function() Snacks.picker.lazy() end";
-      options.desc = "Search for Plugin Spec";
     }
     {
       mode = "n";

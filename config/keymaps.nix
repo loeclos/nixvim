@@ -574,22 +574,6 @@
       };
     }
 
-    # NOTE: <leader>u* toggles live in plugins/utils/snacks.nix (Snacks.toggle, like LazyVim).
-
-    # lazy (plugins are managed declaratively with Nix, so this explains that)
-    {
-      mode = "n";
-      key = "<leader>l";
-      action.__raw = ''
-        function()
-          vim.notify("Plugins are managed declaratively with Nix - see config/plugins", vim.log.levels.INFO)
-        end
-      '';
-      options = {
-        desc = "Lazy";
-      };
-    }
-
     # quit
     {
       mode = "n";
@@ -620,20 +604,6 @@
       '';
       options = {
         desc = "Inspect Tree";
-      };
-    }
-
-    # LazyVim changelog
-    {
-      mode = "n";
-      key = "<leader>L";
-      action.__raw = ''
-        function()
-          vim.ui.open("https://github.com/LazyVim/LazyVim/releases")
-        end
-      '';
-      options = {
-        desc = "LazyVim Changelog";
       };
     }
 
