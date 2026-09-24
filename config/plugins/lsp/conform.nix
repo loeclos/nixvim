@@ -121,11 +121,23 @@
           ];
           lua = [ "stylua" ];
           nix = [ "nixfmt" ];
-          markdown = {
-            __unkeyed-1 = "prettierd";
-            __unkeyed-2 = "prettier";
-            stop_after_first = true;
-          };
+          # First available of prettierd/prettier, then markdown-toc.
+          # See https://github.com/stevearc/conform.nvim/blob/master/doc/recipes.md#run-the-first-available-formatter-followed-by-more-formatters
+          markdown.__raw = ''
+            function(bufnr)
+              local conform = require("conform")
+              local function first(...)
+                for i = 1, select("#", ...) do
+                  local formatter = select(i, ...)
+                  if conform.get_formatter_info(formatter, bufnr).available then
+                    return formatter
+                  end
+                end
+                return select(1, ...)
+              end
+              return { first("prettierd", "prettier"), "markdown-toc" }
+            end
+          '';
           yaml = {
             __unkeyed-1 = "prettierd";
             __unkeyed-2 = "prettier";
@@ -144,6 +156,20 @@
         };
 
         formatters = {
+          # Update the TOC only in files that opt in with a `<!-- toc -->` marker.
+          # See https://www.lazyvim.org/extras/lang/markdown
+          markdown-toc = {
+            command = "${lib.getExe pkgs.markdown-toc}";
+            condition.__raw = ''
+              function(_, ctx)
+                for _, line in ipairs(vim.api.nvim_buf_get_lines(ctx.buf, 0, -1, false)) do
+                  if line:find("<!%-%- toc %-%->") then
+                    return true
+                  end
+                end
+              end
+            '';
+          };
           black = {
             command = "${lib.getExe pkgs.black}";
           };

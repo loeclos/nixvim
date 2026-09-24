@@ -105,7 +105,16 @@ home-manager.users.<user>.home.packages = [
 - `web-devicons.nix`: disabled (mocked by mini.icons, like LazyVim).
 - `toggleterm.nix`: floating terminal behind the LazyVim terminal keymaps
   (`<leader>ft`/`<leader>fT`/`<C-/>`).
-- `obsidian.nix`, `markdown-preview.nix`, `extra_plugins.nix`: personal extras.
+- `obsidian.nix`, `markdown-preview.nix`, `render-markdown.nix`, `extra_plugins.nix`: personal extras.
+
+### Markdown (LazyVim `lang.markdown` extra)
+
+- `render-markdown.nix`: in-buffer rendering (headings, code blocks, tables,
+  callouts) + `<leader>um` toggle and `<leader>cP` side-buffer preview.
+- `markdown-preview.nix`: browser live preview on `<leader>cp` (system default
+  browser, dark theme, sync scroll).
+- `lsp.nix` (marksman), `lint.nix` (markdownlint-cli2) and `conform.nix`
+  (prettier + markdown-toc on `<!-- toc -->` files) cover LSP/lint/format.
 
 ## Known deviations from LazyVim
 
@@ -119,8 +128,8 @@ Nix manages plugins declaratively, so there is no `lazy.nvim` UI:
 - Terminal keymaps are served by toggleterm instead of `Snacks.terminal`.
 - Trouble symbols are not injected into lualine (`vim.g.trouble_lualine` is still set).
 - The snacks picker `flash` integration (`<a-s>`/`s` inside the picker) is not configured.
-- Extra language servers (rust, eslint, emmet, tailwind, helm, ...), obsidian,
-  markdown-preview and toggleterm are personal additions on top of LazyVim core.
+- Extra language servers (rust, eslint, emmet, tailwind, helm, ...), obsidian
+  and toggleterm are personal additions on top of LazyVim core.
 
 ## References
 

@@ -58,6 +58,7 @@ _: {
     ./plugins/utils/extra_plugins.nix
     ./plugins/utils/mini.nix
     ./plugins/utils/markdown-preview.nix
+    ./plugins/utils/render-markdown.nix
     ./plugins/utils/obsidian.nix
     ./plugins/utils/toggleterm.nix
     ./plugins/utils/web-devicons.nix
