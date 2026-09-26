@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  # Go toolchain on neovim's PATH (used by gopls, which can't toolchain-switch).
+  # Tracks `go_latest` so the editor matches project devshells.
+  dependencies.go.package = pkgs.go_latest;
+
   plugins = {
     # Disabled: not part of LazyVim (diagnostics render via signs/virtual text,
     # formatting via conform).
