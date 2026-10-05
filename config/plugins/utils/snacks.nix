@@ -100,6 +100,53 @@
   # LazyVim toggle keymaps + picker keymaps.
   # See https://www.lazyvim.org/configuration/general#keymaps
   extraConfigLua = ''
+    -- Override for Nvim >= 0.11: the pinned snacks.nvim rev still calls
+    -- `client.supports_method(...)` / `client.request_sync(...)` /
+    -- `client.notify(...)` with dot-syntax, which core shims via
+    -- `vim.deprecate('client.X', 'client:X', '0.13')` on every explorer
+    -- rename (`r`/`m`) and `<leader>cR`. Redefine the handler with
+    -- colon-calls (same semantics, no deprecation warning) and isolate
+    -- per-server `willRenameFiles` failures so one bad server can never
+    -- abort the actual `vim.fn.rename`.
+    do
+      local ok, rename = pcall(require, "snacks.rename")
+      if ok and type(rename.on_rename_file) == "function" then
+        function rename.on_rename_file(from, to, rename_fn)
+          local changes = { files = { {
+            oldUri = vim.uri_from_fname(from),
+            newUri = vim.uri_from_fname(to),
+          } } }
+
+          for _, client in ipairs(vim.lsp.get_clients()) do
+            local supports = false
+            local s_ok, s_res = pcall(client.supports_method, client, "workspace/willRenameFiles")
+            supports = s_ok and s_res or false
+            if supports then
+              pcall(function()
+                local resp = client:request_sync("workspace/willRenameFiles", changes, 1000, 0)
+                if resp and resp.result ~= nil then
+                  vim.lsp.util.apply_workspace_edit(resp.result, client.offset_encoding)
+                end
+              end)
+            end
+          end
+
+          if rename_fn then
+            rename_fn()
+          end
+
+          for _, client in ipairs(vim.lsp.get_clients()) do
+            local supports = false
+            local s_ok, s_res = pcall(client.supports_method, client, "workspace/didRenameFiles")
+            supports = s_ok and s_res or false
+            if supports then
+              pcall(client.notify, client, "workspace/didRenameFiles", changes)
+            end
+          end
+        end
+      end
+    end
+
     Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
     Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
     Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>uL")

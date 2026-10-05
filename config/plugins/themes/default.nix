@@ -1,16 +1,16 @@
-# Personal theme choice: kape (https://github.com/kape-theme/nvim).
+# Personal theme choice: pure (https://github.com/loeclos/pure.nvim).
 # Not packaged in nixpkgs, so it is pinned from GitHub below.
 # LazyVim default would be tokyonight: https://www.lazyvim.org/plugins/colorscheme
 { pkgs, ... }:
 let
-  kape-nvim = pkgs.vimUtils.buildVimPlugin {
-    pname = "kape-nvim";
-    version = "2026-06-24";
+  pure-nvim = pkgs.vimUtils.buildVimPlugin {
+    pname = "pure.nvim";
+    version = "2026-10-05";
     src = pkgs.fetchFromGitHub {
-      owner = "kape-theme";
-      repo = "nvim";
-      rev = "ea0235dfd3745344dde4f19e337afd1316eb8c7d";
-      hash = "sha256-7aeO7gs+RC0qif5PwSKB/+1hGL5AhzLSfA5J2uO62cI=";
+      owner = "loeclos";
+      repo = "pure.nvim";
+      rev = "82a386dda0fcc55b9a3dde8e14dc3ef155ac35e7";
+      hash = "sha256-16/YFbio0Rc/g2NdlzALrIRr8Xg0dsIpRUdipYb0I50=";
     };
   };
 in
@@ -20,9 +20,9 @@ in
     tokyonight.enable = false;
   };
 
-  colorscheme = "kape";
+  colorscheme = "pure";
 
   extraPlugins = [
-    kape-nvim
+    pure-nvim
   ];
 }
