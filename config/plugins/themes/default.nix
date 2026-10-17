@@ -9,8 +9,8 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "loeclos";
       repo = "pure.nvim";
-      rev = "82a386dda0fcc55b9a3dde8e14dc3ef155ac35e7";
-      hash = "sha256-16/YFbio0Rc/g2NdlzALrIRr8Xg0dsIpRUdipYb0I50=";
+      rev = "cd12173d8840aa915faf1dbf8b46fd81e4e79795";
+      hash = "sha256-uV3FP42/rI5RuFeoBSUv9nM6Bu5OH/YKpk/7PFECRtM=";
     };
   };
 in

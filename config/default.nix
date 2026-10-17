@@ -60,6 +60,7 @@ _: {
     ./plugins/utils/markdown-preview.nix
     ./plugins/utils/render-markdown.nix
     ./plugins/utils/obsidian.nix
+    ./plugins/utils/orgmode.nix
     ./plugins/utils/toggleterm.nix
     ./plugins/utils/web-devicons.nix
     ./plugins/utils/persistence.nix
