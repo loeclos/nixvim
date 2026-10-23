@@ -145,7 +145,6 @@
           };
           rust = [ "rustfmt" ];
           terraform = [ "terraform_fmt" ];
-          bicep = [ "bicep" ];
           bash = [
             "shellcheck"
             "shellharden"
@@ -199,9 +198,6 @@
           };
           shellharden = {
             command = "${lib.getExe pkgs.shellharden}";
-          };
-          bicep = {
-            command = "${lib.getExe pkgs.bicep}";
           };
           rustfmt = {
             command = "${lib.getExe pkgs.rustfmt}";
